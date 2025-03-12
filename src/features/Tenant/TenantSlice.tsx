@@ -1,3 +1,7 @@
+//tenantSlice:
+// skapar en tenant (POST /tenants)
+//lagrar Tenant ID:t
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API_BASE_URL } from "../apiKey/apiConfig";
 import { RootState } from "../../store/store";

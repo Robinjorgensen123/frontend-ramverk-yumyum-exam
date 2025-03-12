@@ -1,5 +1,7 @@
+//Hämtar menyn från API:et (GET /menu)
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { API_BASE_URL } from "../apiKey/apiConfig";
+import { fetchMenuApi } from "../../api/menuApi";
 import { RootState } from "../../store/store";
 
 // Typ för menyobjekt
@@ -31,7 +33,6 @@ export const fetchMenu = createAsyncThunk<MenuItem[], void, { state: RootState; 
     "menu/fetchMenu",
     async (_, { getState, rejectWithValue }) => {
         try {
-
             const state = getState()
             const apiKey = state.apikey.key;
 
@@ -39,21 +40,8 @@ export const fetchMenu = createAsyncThunk<MenuItem[], void, { state: RootState; 
                 return rejectWithValue("API Key saknas!");
             }
 
-            const response = await fetch(`${API_BASE_URL}/menu`, {
-                method: "GET",
-                headers: {
-                    "x-zocom": apiKey,
-                    "Content-Type": "application/json",
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error("Misslyckades med att hämta menyn");
-            }
-
-            const data = await response.json();
-            console.log("Fetched menu data", data)
-            return data.items;
+            const data = await fetchMenuApi(apiKey)
+            return data.items
         } catch (error) {
             return rejectWithValue(error instanceof Error ? error.message : "an unexpected error occured");
         }

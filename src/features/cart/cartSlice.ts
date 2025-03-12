@@ -1,3 +1,8 @@
+//CartSlice:
+//Hanterar varukorgen (lägga till/tabort produkter)
+//Lagrar Lista med produkter i varukorgen
+
+
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface CartItem {

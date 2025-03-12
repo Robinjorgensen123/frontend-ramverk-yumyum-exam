@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MenuPage from "../pages/Menu/MenuPage";
-/* import CartPage from "../pages/Cart/CartPage"; */
 import Header from "../components/Header/header";
 import CartModal from "../pages/Cart/CartModal";
 import EtaPage from "../pages/Eta/EtaPage";
 import TenantInitiate from "../features/Tenant/TenantInitiate";
+import ReceiptPage from "../pages/Reciept/ReceiptPage"
 
 
 const AppRouter = () => {
@@ -15,6 +15,7 @@ const AppRouter = () => {
             <Routes>
                 <Route path="/" element={<MenuPage/>}/>
                 <Route path="/eta" element={<EtaPage/>}/>
+                <Route path="receipt" element={<ReceiptPage/>}/>
             </Routes>
             <CartModal/>
         </Router>

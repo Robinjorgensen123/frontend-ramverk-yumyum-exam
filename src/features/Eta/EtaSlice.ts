@@ -1,15 +1,16 @@
+//EtaSlice:
+//Hämtar Eta & ordernummber (GET /orders({orderId})
+
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { API_BASE_URL } from "../apiKey/apiConfig";
+import { fetchEtaApi } from "../../api/etaAPI"; // ✅ Använder API-funktionen
 import { RootState } from "../../store/store";
 
-
 interface EtaState {
-    orderNumber: string | null;
-    eta: number | null;
-    loading: boolean;
-    error: string | null;
+    orderNumber: string | null
+    eta: string | null
+    loading: boolean
+    error: string | null
 }
-
 
 const initialState: EtaState = {
     orderNumber: null,
@@ -18,62 +19,35 @@ const initialState: EtaState = {
     error: null,
 };
 
-//  Thunk-funktion för att skicka en order och hämta ETA
+// ✅ Thunk för att hämta ETA för en befintlig order
 export const fetchEta = createAsyncThunk<
-    { orderNumber: string; eta: number },
-    { tenantId: string },                                //  Ingen parameter skickas in
-    { state: RootState; rejectValue: string }  //  Vi hämtar state och kan returnera ett error-meddelande
+    { orderNumber: string; eta: string | null}, 
+    { tenantId: string; orderId: string }, 
+    { state: RootState; rejectValue: string }
 >(
     "eta/fetchEta",
-    async ({ tenantId }, { getState, rejectWithValue }) => {
+    async ({ tenantId, orderId }, { getState, rejectWithValue }) => {
         try {
             const state = getState();
             const apiKey = state.apikey.key;
-            const cartItems = state.cart.items;
 
-            //  Kontrollera att API-nyckel, tenant och varukorg finns
             if (!apiKey) return rejectWithValue("API-nyckel saknas!");
-            if (!tenantId) return rejectWithValue("Tenant ID saknas! Registrera en Tenant först.");
-            if (cartItems.length === 0) return rejectWithValue("Varukorgen är tom.");
+            if (!tenantId) return rejectWithValue("Tenant ID saknas!");
+            if (!orderId) return rejectWithValue("Order ID saknas!");
 
-            const orderData = {
-                items: cartItems.map((item) => item.id),
-            };
-            console.log("🔼 Skickar order:", orderData);
-
-            //  Skicka beställning till med tenantId
-            const response = await fetch(`${API_BASE_URL}/${tenantId}/orders`, {
-                method: "POST",
-                headers: {
-                    "x-zocom": apiKey,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(orderData),
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                return rejectWithValue(`Misslyckades med att skapa order: ${errorText}`);
-            }
-
-            const data = await response.json();
-            console.log("✅ Orderbekräftelse:", data);
-
-            return {
-                orderNumber: data.order.id,
-                eta: data.order.eta,
-            };
+            const { orderNumber, eta } = await fetchEtaApi(tenantId, orderId, apiKey); // ✅ Använder API-funktionen
+            return { orderNumber, eta}
         } catch (error) {
             return rejectWithValue(error instanceof Error ? error.message : "Ett oväntat fel inträffade");
         }
     }
 );
 
-//  Skapa `etaSlice`
+// ✅ Skapa etaSlice
 const etaSlice = createSlice({
     name: "eta",
-    initialState,  //  Använder initialState här!
-    reducers: {},  // Ingen vanlig reducer behövs, vi använder bara async-thunks
+    initialState,
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchEta.pending, (state) => {
@@ -82,8 +56,8 @@ const etaSlice = createSlice({
             })
             .addCase(fetchEta.fulfilled, (state, action) => {
                 state.loading = false;
-                state.orderNumber = action.payload.orderNumber;
-                state.eta = action.payload.eta;
+                state.orderNumber = action.payload.orderNumber
+                state.eta = action.payload.eta || null // ✅ Sparar endast ETA
             })
             .addCase(fetchEta.rejected, (state, action) => {
                 state.loading = false;

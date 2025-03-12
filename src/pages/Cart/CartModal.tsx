@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch } from "../../store/store"
+import { AppDispatch, RootState } from "../../store/store"
 import { removeFromCart } from "../../features/cart/cartSlice"
 import { toggleCart } from "../../features/Ui/UiSlice"
-import { RootState } from "../../store/store"
 import { useNavigate } from "react-router-dom"
-import { fetchEta } from "../../features/Eta/EtaSlice"
-import "./CartModal.scss"
+import { placeOrder } from "../../features/order/orderSlice"
 import { useState } from "react"
+import "./CartModal.scss"
+
 
 const CartModal = () => {
     const dispatch = useDispatch<AppDispatch>()
@@ -22,7 +22,6 @@ const CartModal = () => {
         setError(null)
 
         
-
         if (!tenantId) {
             setError("inten Tenant hittades registrera en Tenant först")
             return;
@@ -35,9 +34,10 @@ const CartModal = () => {
 
 
         try {
-            await dispatch(fetchEta({ tenantId })).unwrap()
+            const items = cart.map((item) => item.id)
+            await dispatch(placeOrder({ tenantId, items})).unwrap()
             dispatch(toggleCart())
-            navigate("/eta")
+            navigate("eta")
         } catch (error) {
             console.error("Kunde inte skicka beställningen",error)
             setError("något gick fel vid beställningen. Försök igen.")

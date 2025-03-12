@@ -1,3 +1,6 @@
+//uiSlice:
+//Hanterar UI state (öppna/stänga varukorgen)
+
 import { createSlice } from "@reduxjs/toolkit";
 
 interface UIState {

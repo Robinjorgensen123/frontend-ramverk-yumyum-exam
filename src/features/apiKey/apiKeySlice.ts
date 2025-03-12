@@ -1,3 +1,7 @@
+//apiKeySlice:
+//Hämtar och lagrar API-Nyckeln (POST /keys)
+
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API_BASE_URL } from "../apiKey/apiConfig";
 
