@@ -60,8 +60,8 @@ export const fetchEta = createAsyncThunk<
             console.log("✅ Orderbekräftelse:", data);
 
             return {
-                orderNumber: data.id,
-                eta: data.eta,
+                orderNumber: data.order.id,
+                eta: data.order.eta,
             };
         } catch (error) {
             return rejectWithValue(error instanceof Error ? error.message : "Ett oväntat fel inträffade");

@@ -3,7 +3,7 @@ import { AppDispatch, RootState } from "../../store/store";
 import { useEffect, useState } from "react";
 import { registerTenant } from "../../features/Tenant/TenantSlice";
 import { fetchApiKey } from "../../features/apiKey/apiKeySlice";
-
+import "./tenant.css"
 const TenantInitiate = () => {
     const dispatch = useDispatch<AppDispatch>();
     const apiKey = useSelector((state: RootState) => state.apikey.key);
@@ -30,11 +30,11 @@ const TenantInitiate = () => {
     };
 
     return (
-        <div>
+        <div className="create-tenant">
             {(apiKeyLoading || tenantLoading) && <p>⏳ Hämtar data...</p>}
 
             {!tenantId && apiKey && (
-                <div>
+                <div className="tenant-wrapper">
                     <h3>Välj ett namn för din Tenant:</h3>
                     <input
                         type="text"

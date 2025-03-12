@@ -9,7 +9,7 @@ interface TenantState {
 }
 
 const initialState: TenantState = {
-    tenantId: localStorage.getItem("tenantId"),  // Hämta från localStorage vid start
+    tenantId: localStorage.getItem("tenantId"),
     loading: false,
     error: null,
 };
@@ -20,24 +20,23 @@ export const registerTenant = createAsyncThunk<
     { state: RootState; rejectValue: string }
 >(
     "tenant/registerTenant",
-    async (_, { getState, rejectWithValue }) => {
+    async (tenantName, { getState, rejectWithValue }) => {
         try {
             const state = getState();
             const apiKey = state.apikey.key;
-            const existingTenant = localStorage.getItem("tenantId"); // Kolla localStorage först
+
 
             if (!apiKey) {
                 console.error("API-nyckel saknas");
                 return rejectWithValue("API-nyckel saknas");
             }
 
+            const existingTenant = localStorage.getItem("tenantId");
             if (existingTenant) {
-                console.log(" Tenant finns redan i localStorage:", existingTenant);
+                console.log("Tenant finns redan i localStorage:", existingTenant);
                 return existingTenant;
             }
 
-            // Generera ett dynamiskt namn istället för "zocom"
-            const tenantName = `tenant-${Math.random().toString(36).substring(7)}`;
             console.log("🔼 Skickar ny tenant:", tenantName);
 
             const response = await fetch(`${API_BASE_URL}/tenants`, {
@@ -57,7 +56,6 @@ export const registerTenant = createAsyncThunk<
             const data = await response.json();
             console.log("✅ Tenant registrerad:", data.id);
 
-            // Spara Tenant ID i localStorage
             localStorage.setItem("tenantId", data.id);
 
             return data.id;
