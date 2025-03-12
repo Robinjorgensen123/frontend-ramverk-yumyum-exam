@@ -6,7 +6,7 @@ $leaf-background: url('../../Images/leaf.png');
   flex-direction: column;
   width: 358px;
   max-width: 358px; // Fast bredd för menyn
-  padding: 0;
+  padding: 15px;
   color: white;
   border-radius: 8px;
   overflow: hidden;
@@ -44,6 +44,10 @@ $leaf-background: url('../../Images/leaf.png');
     background-color: #574f4f;
     padding: 15px 20px;
     border-top: 1px solid #3a7faa;
+
+    &.selected {
+      background-color: #716a6a;
+  }
     
     .item-header {
       display: flex;
@@ -68,6 +72,7 @@ $leaf-background: url('../../Images/leaf.png');
         &::after {
           content: " SEK";
         }
+       
       }
     }
     

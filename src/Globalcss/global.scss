@@ -18,8 +18,10 @@ body {
     display: flex;
     flex-direction: column;
     height: 844px;
-    padding: 20px;
-    justify-self: center;
+    width: 390px;
+    margin: 0;
+    padding: 0;
+    align-items: center;
     background-image: $leaf-background;
     background-color: #8ed8bf;
     

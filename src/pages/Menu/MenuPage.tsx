@@ -3,32 +3,45 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { fetchMenu } from "../../features/menu/menuSlice";
+import { addToCart } from "../../features/cart/cartSlice";
+import { MenuItem } from "../../features/menu/menuSlice";
 import "./menu.scss";
-import Header from "../../components/Header/header";
+
 
 const MenuPage = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { items, loading, error } = useSelector((state: RootState) => state.menu);
     const [selectedDip, setSelectedDip] = useState<string | null>(null)
+    const [selectedDish, setSelectedDish] = useState<string | null>(null)
 
     useEffect(() => {
         dispatch(fetchMenu());
     }, [dispatch]);
 
-    const dishes = items.filter((item) => item.type === "wonton")
-    const dips = items.filter((item) => item.type === "dip")
+    const dishes: MenuItem[] = items.filter((item) => item.type === "wonton")
+    const dips: MenuItem[] = items.filter((item) => item.type === "dip")
 
-    const handleDipClick = (dipId: string) => {
-        if (selectedDip === dipId) {
-            setSelectedDip(null)
+    const handleDishClick = (dish: MenuItem) => {
+        if (selectedDish === dish.id) {
+            setSelectedDish(null);
         } else {
-            setSelectedDip(dipId)
+            setSelectedDish(dish.id)
+            dispatch(addToCart(dish))
+        }
+    }
+
+
+    const handleDipClick = (dip: MenuItem) => {
+        if (selectedDip === dip.id) {
+            setSelectedDip(null);
+        } else {
+            setSelectedDip(dip.id)
+            dispatch(addToCart(dip))
         }
     }
 
     return (
         <div className="menu-container">
-            <Header/>
             {loading && <p>Laddar menyn...</p>}
             {error && <p>{error}</p>}
             
@@ -38,13 +51,16 @@ const MenuPage = () => {
             
             <div className="menu-items">
                 {dishes.map((item) => (
-                    <div className="menu-item" key={item.id}>
+                    <div className={`menu-item ${selectedDish === item.id ? 'selected' : ''}`}  
+                        key={item.id}
+                        onClick={() => handleDishClick(item)}
+                        >
                         <div className="item-header">
                             <span className="location">{item.name}</span>
                             <span className="price">{item.price}</span>
                         </div>
                         <div className="item-description">
-                            {item.ingredients.join(", ")}
+                            {item.ingredients?.join(", ")}
                         </div>
                     </div>
                 ))}
@@ -59,7 +75,7 @@ const MenuPage = () => {
                         {dips.map((item) => (
                             <button key={item.id}
                              className={`dip-option ${selectedDip === item.id ? 'selected' : ''}`}
-                             onClick={() => handleDipClick(item.id)}
+                             onClick={() => handleDipClick(item)}
                              >
                                 {item.name}
                             </button>

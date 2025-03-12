@@ -1,18 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { API_BASE_URL, getApiKeyFromStorage } from "../apiKey/apiConfig";
+import { API_BASE_URL } from "../apiKey/apiConfig";
+import { RootState } from "../../store/store";
 
 // Typ för menyobjekt
-interface MenuItem {
+export interface MenuItem {
     id: string;
     name: string;
     price: number;
-    description: string;
-    ingredients: string[]
-    type: string;
+    type: "wonton" | "dip"
+    ingredients?: string[]
+    
 }
 
 // Redux state för meny
-interface MenuState {
+ interface MenuState {
     items: MenuItem[];
     loading: boolean;
     error: string | null;
@@ -26,11 +27,14 @@ const initialState: MenuState = {
 };
 
 // Async Thunk för att hämta menyn
-export const fetchMenu = createAsyncThunk<MenuItem[], void, { rejectValue: string }>(
+export const fetchMenu = createAsyncThunk<MenuItem[], void, { state: RootState; rejectValue: string }>(
     "menu/fetchMenu",
-    async (_, { rejectWithValue }) => {
+    async (_, { getState, rejectWithValue }) => {
         try {
-            const apiKey = getApiKeyFromStorage();
+
+            const state = getState()
+            const apiKey = state.apikey.key;
+
             if (!apiKey) {
                 return rejectWithValue("API Key saknas!");
             }

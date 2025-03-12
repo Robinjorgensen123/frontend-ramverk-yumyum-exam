@@ -1,6 +1,6 @@
 
-import MenuPage from './pages/Menu/MenuPage'
 import "./Globalcss/global.scss"
+import AppRouter from './routes/routes'
 
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
   return (
     <>
     <div className='app-container'>
-      <MenuPage/>
+     <AppRouter/>
     </div>
     </>
   )
