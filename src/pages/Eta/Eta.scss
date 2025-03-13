@@ -1,18 +1,69 @@
-
-
-
 .eta-container {
     display: flex;
     flex-direction: column;
-    width: 358px;
-    max-width: 358px;
-    padding: 15px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #4b4140; // Mörk bakgrund
+    height: 100vh;
     color: white;
-    border-radius: 8px;
-    font-family: arial, sans-serif;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    background-color: #605858;
-    height: 100%;
-    align-self: flex-start;
-    margin:  20px 0;
-}
+    padding: 20px;
+    font-family: "Arial", sans-serif;
+  }
+  
+  .eta-container img {
+    width: 180px; // Anpassa bildstorlek
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .eta-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 10px 0 5px;
+  }
+  
+  .eta-subtitle {
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  .eta-text {
+    font-size: 16px;
+    margin: 10px 0;
+    font-weight: bold;
+  }
+  
+  .eta-order-number {
+    font-size: 14px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+  }
+  
+  .eta-button {
+    width: 90%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    margin: 10px 0;
+    border-radius: 5px;
+  }
+  
+  .eta-button.new-order {
+    background-color: black;
+    color: white;
+  }
+  
+  .eta-button.receipt {
+    background-color: #5c5453;
+    color: white;
+  }
+  
+  .eta-button:disabled {
+    background-color: #7a6f6e;
+    cursor: not-allowed;
+  }
+  
