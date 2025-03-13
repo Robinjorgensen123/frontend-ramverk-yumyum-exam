@@ -4,8 +4,7 @@ import Header from "../components/Header/header";
 import CartModal from "../pages/Cart/CartModal";
 import EtaPage from "../pages/Eta/EtaPage";
 import TenantInitiate from "../features/Tenant/TenantInitiate";
-import ReceiptPage from "../pages/Reciept/ReceiptPage"
-
+import ReceiptPage from "../pages/Reciept/ReceiptPage";
 
 const AppRouter = () => {
     return (
@@ -15,12 +14,12 @@ const AppRouter = () => {
             <Routes>
                 <Route path="/" element={<MenuPage/>}/>
                 <Route path="/eta" element={<EtaPage/>}/>
-                <Route path="receipt" element={<ReceiptPage/>}/>
+                <Route path="/receipt" element={<ReceiptPage/>}/>
+                <Route path="/receipt/:orderId" element={<ReceiptPage/>}/>
             </Routes>
             <CartModal/>
         </Router>
     )
-
 }
 
 export default AppRouter

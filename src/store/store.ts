@@ -6,7 +6,7 @@ import uiReducer from "../features/Ui/UiSlice"
 import etaReducer from "../features/Eta/EtaSlice"
 import tenantReducer from "../features/Tenant/TenantSlice"
 import orderReducer from "../features//order/orderSlice"
-import recieptReducer from "../features/receipt/receiptSlice"
+import receiptReducer from "../features/receipt/receiptSlice"
 
 const store = configureStore({
   reducer: {
@@ -17,7 +17,7 @@ const store = configureStore({
     tenant: tenantReducer,
     ui: uiReducer,
     order: orderReducer,
-    reciept: recieptReducer,
+    receipt: receiptReducer,
     
   },
 });
