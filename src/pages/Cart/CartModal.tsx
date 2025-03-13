@@ -1,49 +1,50 @@
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, RootState } from "../../store/store"
-import { removeFromCart } from "../../features/cart/cartSlice"
-import { toggleCart } from "../../features/Ui/UiSlice"
-import { useNavigate } from "react-router-dom"
-import { placeOrder } from "../../features/order/orderSlice"
-import { useState } from "react"
-import "./CartModal.scss"
-
+// CartModal.tsx
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { removeFromCart, updateTotal } from "../../features/cart/cartSlice";
+import { toggleCart } from "../../features/Ui/UiSlice";
+import { useNavigate } from "react-router-dom";
+import { placeOrder } from "../../features/order/orderSlice";
+import { useState, useEffect } from "react";
+import "./CartModal.scss";
 
 const CartModal = () => {
-    const dispatch = useDispatch<AppDispatch>()
-    const navigate = useNavigate()
-    const cart = useSelector((state: RootState) => state.cart.items)
-    const isCartOpen = useSelector((state: RootState) => state.ui.isCartOpen)
-    const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
-    const [error, setError] = useState<string | null>(null)
-    const tenantId = useSelector((state: RootState) => state.tenant.tenantId) || localStorage.getItem("tenantId")
+    const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
+    const cart = useSelector((state: RootState) => state.cart.items);
+    const isCartOpen = useSelector((state: RootState) => state.ui.isCartOpen);
+    const tenantId = useSelector((state: RootState) => state.tenant.tenantId) || localStorage.getItem("tenantId");
+  const totalAmount = useSelector((state: RootState) => state.cart.totalAmount); // Hämtar totalAmount från Redux
 
-    
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        dispatch(updateTotal());
+    }, [cart, dispatch]);
+
     const handleOrderSubmit = async () => {
-        setError(null)
+        setError(null);
 
-        
         if (!tenantId) {
-            setError("inten Tenant hittades registrera en Tenant först")
+            setError("Ingen Tenant hittades. Registrera en Tenant först.");
             return;
         }
 
         if (cart.length === 0) {
-            setError("varukorgen är tom ! lägg till något innan du beställer!!")
+            setError("Varukorgen är tom! Lägg till något innan du beställer!");
             return
         }
 
-
         try {
-            const items = cart.map((item) => item.id)
-            await dispatch(placeOrder({ tenantId, items})).unwrap()
-            dispatch(toggleCart())
-            navigate("eta")
+            const items = cart.map((item) => item.id);
+            await dispatch(placeOrder({ tenantId, items})).unwrap();
+            dispatch(toggleCart());
+            navigate("eta");
         } catch (error) {
-            console.error("Kunde inte skicka beställningen",error)
-            setError("något gick fel vid beställningen. Försök igen.")
+            console.error("Kunde inte skicka beställningen", error);
+            setError("Något gick fel vid beställningen. Försök igen.");
         }
     }
-
 
     if(!isCartOpen) return null
 
@@ -79,7 +80,7 @@ return (
         <div className="cart-footer">
             <div className="total-price">
                 <span>TOTALT</span>
-                <span>{totalPrice} SEK</span>
+                <span>{totalAmount} SEK</span>
             </div>
             {error && <p className="error-message">{error}</p>}
             <button className="checkout-btn" onClick={handleOrderSubmit}>TAKE MY MONEY!</button>

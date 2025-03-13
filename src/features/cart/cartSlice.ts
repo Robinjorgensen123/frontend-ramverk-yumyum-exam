@@ -1,8 +1,4 @@
-//CartSlice:
-//Hanterar varukorgen (lägga till/tabort produkter)
-//Lagrar Lista med produkter i varukorgen
-
-
+// src/features/cart/cartSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface CartItem {
@@ -12,44 +8,49 @@ interface CartItem {
     quantity: number;
 }
 
+interface CartState {
+    items: CartItem[];
+    totalAmount: number;
+}
+
 const loadCartFromLocalStorage = (): CartItem[] => {
     const storedCart = localStorage.getItem("cart")
     return storedCart ? JSON.parse(storedCart) : [];
 }
 
-interface CartState {
-    items: CartItem[];
-}
-
 const initialState: CartState = {
     items: loadCartFromLocalStorage(),
+    totalAmount: 0,
 };
 
 const savedCartToLocalStorage = (cartItems: CartItem[]) => {
     localStorage.setItem("cart", JSON.stringify(cartItems))
 }
 
-
-//Funktion för att tabort produkter ifrån Cart 
 const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
         addToCart: (state, action: PayloadAction<Omit<CartItem, "quantity">>) => {
-            const existingItem = state.items.find(item => item.id === action.payload.id)
+            const existingItem = state.items.find(item => item.id === action.payload.id);
             if (existingItem) {
                 existingItem.quantity += 1
             } else {
                 state.items.push({ ...action.payload, quantity: 1})
             }
-            savedCartToLocalStorage(state.items)
+            savedCartToLocalStorage(state.items);
+            state.totalAmount = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
         },
         removeFromCart: (state, action: PayloadAction<string>) => {
             state.items = state.items.filter((item) => item.id !== action.payload);
-            savedCartToLocalStorage(state.items)
+            savedCartToLocalStorage(state.items);
+            state.totalAmount = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        },
+        updateTotal: (state) => {
+            state.totalAmount = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
         },
     },
 });
 
-export const { addToCart,removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateTotal } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -1,13 +1,132 @@
+// receipt.scss
 .receipt-container {
     display: flex;
-    width: 100%;
-    height: 100%;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+  }
+  
+  .receipt-box {
+    width: 100%;
+    max-width: 358px;
     background-color: white;
-}
-
-.logo {
-max-height: 176px;
-max-width: 146px
-}    ;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .logo-box {
+    width: 64px;
+    height: 64px;
+    background-color: #ff3b3b;
+    color: white;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .logo-box span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  
+  .order-id {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  
+  .receipt-items {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+  
+  .receipt-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    width: 100%;
+  }
+  
+  .item-left {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .item-name {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .item-quantity {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .item-price {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .receipt-total {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 16px 0;
+    border-top: 1px solid #ddd;
+    margin-bottom: 24px;
+  }
+  
+  .total-label {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  
+  .total-value {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  
+  .tax-info {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .new-order-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+  
+  .new-order-btn:hover {
+    background-color: #555;
+  }
+  

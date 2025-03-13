@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../store/store";
@@ -8,30 +8,12 @@ import boxTop from "../../Images/boxtop 1.png";
 const EtaPage = () => {
   const navigate = useNavigate();
   
-  const { orderId, eta } = useSelector((state: RootState) => state.order);
-  const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  
-  // Beräkna tid kvar
-  useEffect(() => {
-    if (eta) {
-      const etaDate = new Date(eta);
-      const updateTimeLeft = () => {
-        const now = new Date();
-        const diffMs = etaDate.getTime() - now.getTime();
-        const diffMin = Math.floor(diffMs / 60000);
-        setTimeLeft(diffMin > 0 ? diffMin : 0);
-      };
-      
-      updateTimeLeft();
-      const interval = setInterval(updateTimeLeft, 60000);
-      return () => clearInterval(interval);
-    }
-  }, [eta]);
+  const { orderId, eta, status } = useSelector((state: RootState) => state.order);
   
   // Navigera till kvittosidan
   const goToReceipt = () => {
     console.log("Navigerar till kvitto för order:", orderId);
-    navigate("/receipt");
+    navigate(`/receipt/${orderId}`);
   };
   
   return (
@@ -42,25 +24,26 @@ const EtaPage = () => {
       <h2>DINA WONTONS</h2>
       <h3>TILLAGAS!</h3>
       
-      {timeLeft !== null ? (
-        <p className="eta-text">
-          {timeLeft > 0 ? `${timeLeft} MIN` : "Strax klart!"}
-        </p>
+      {status === "loading" ? (
+        <p>Laddar Orderinformation...</p>
+      ) : status === "failed" ? (
+        <p className="error-text">Ett fel inträffade vid hämtning av orderinformation.</p>
+      ) : eta ? (
+        <>
+          <p className="eta-text">
+            Din beställning beräknas vara klar om {eta} minuter.
+          </p>
+          <p className="order-number">Ordernummer: #{orderId}</p>
+        </>
       ) : (
-        <p className="eta-text">Beräknar tillagningstid...</p>
+        <p className="error-text">Okänt ETA</p>
       )}
       
-      <p className="order-number">Ordernummer: #{orderId}</p>
-      
       <button onClick={() => navigate("/")}>Beställ igen</button>
-      <button onClick={goToReceipt}>Se kvitto</button>
       
-      {/* Debug info */}
-      <div style={{ marginTop: '20px', fontSize: '12px', color: '#666' }}>
-        <p>Order ID: {orderId}</p>
-        <p>ETA: {eta}</p>
-        <p>Time left: {timeLeft} min</p>
-      </div>
+      <button onClick={goToReceipt} disabled={status !== "success"}>
+        {status === "success" ? "Visa kvitto" : "Väntar på orderbekräftelse..."}
+      </button>
     </div>
   );
 };
