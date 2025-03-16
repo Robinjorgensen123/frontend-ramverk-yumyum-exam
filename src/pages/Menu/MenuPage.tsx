@@ -13,13 +13,16 @@ const MenuPage = () => {
     const { items, loading, error } = useSelector((state: RootState) => state.menu);
     const [selectedDip, setSelectedDip] = useState<string | null>(null)
     const [selectedDish, setSelectedDish] = useState<string | null>(null)
+    const [selectedDrinks, setSelectedDrinks] = useState<string | null>(null)
+
 
     useEffect(() => {
-        dispatch(fetchMenu());
+        dispatch(fetchMenu()); // dispatch för att anropa thunken
     }, [dispatch]);
 
     const dishes: MenuItem[] = items.filter((item) => item.type === "wonton")
     const dips: MenuItem[] = items.filter((item) => item.type === "dip")
+    const drinks: MenuItem[] = items.filter((item) => item.type === "drink")
 
     const handleDishClick = (dish: MenuItem) => {
         if (selectedDish === dish.id) {
@@ -29,7 +32,7 @@ const MenuPage = () => {
             dispatch(addToCart(dish))
         }
     }
-
+//items skickas med dispatch till addToCart
 
     const handleDipClick = (dip: MenuItem) => {
         if (selectedDip === dip.id) {
@@ -39,6 +42,15 @@ const MenuPage = () => {
             dispatch(addToCart(dip))
         }
     }
+
+    const handleDrinkClick = (drink: MenuItem) => {
+        if (selectedDrinks === drink.id) {
+            setSelectedDrinks(null);
+        } else {
+            setSelectedDrinks(drink.id);
+            dispatch(addToCart(drink)); //  Lägg till i varukorgen
+        }
+    };
 
     return (
         <div className="menu-container">
@@ -65,17 +77,35 @@ const MenuPage = () => {
                     </div>
                 ))}
                 
-                <div className="dipsas-section">
-                    <div className="dipsas-header">
-                        <span className="dipsas-title">DIPSÅS</span>
+                <div className="alternative-section">
+                    <div className="alternative-header">
+                        <span className="alternative-title">DIPSÅS</span>
                         <span className="price">19</span>
                     </div>
                     
-                    <div className="dip-options">
+                    <div className="alternative-options">
                         {dips.map((item) => (
                             <button key={item.id}
-                             className={`dip-option ${selectedDip === item.id ? 'selected' : ''}`}
+                             className={`alternative-option ${selectedDip === item.id ? 'selected' : ''}`}
                              onClick={() => handleDipClick(item)}
+                             >
+                                {item.name}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                
+                <div className="alternative-section">
+                    <div className="alternative-header">
+                        <span className="alternative-title">DRINKS</span>
+                        <span className="price">19</span>
+                    </div>
+                    
+                    <div className="alternative-options">
+                        {drinks.map((item) => (
+                            <button key={item.id}
+                             className={`alternative-option ${selectedDrinks === item.id ? 'selected' : ''}`}
+                             onClick={() => handleDrinkClick(item)}
                              >
                                 {item.name}
                             </button>

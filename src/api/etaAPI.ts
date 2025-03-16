@@ -12,20 +12,20 @@ export const fetchEtaApi = async (tenantId: string, orderId: string, apiKey: str
     const response = await fetch(url, {
         method: "GET",
         headers: {
-            "x-zocom": apiKey, // ✅ Nu skickar vi API-nyckeln korrekt!
+            "x-zocom": apiKey, //  Skickar api nyckel
             "Content-Type": "application/json",
         },
     });
 
-    console.log("📥 API-svar status:", response.status);
+    console.log(" API-svar status:", response.status);
     if (!response.ok) {
         const errorText = await response.text();
-        console.error("❌ Misslyckades att hämta ETA:", errorText);
+        console.error(" Misslyckades att hämta ETA:", errorText);
         throw new Error(`Misslyckades att hämta ETA: ${errorText}`);
     }
 
     const data = await response.json();
-    console.log("✅ API Response (ETA):", data);
+    console.log("API Response (ETA):", data);
 
     return {
         orderNumber: data.order?.id || null,

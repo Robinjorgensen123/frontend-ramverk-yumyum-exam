@@ -1,8 +1,8 @@
 import { API_BASE_URL } from "../features/apiKey/apiConfig";
 
 export const fetchReceiptApi = async (orderId: string, apiKey: string) => {
-    if (!apiKey) throw new Error("❌ API-nyckel saknas!");
-    if (!orderId) throw new Error("❌ Order ID saknas!");
+    if (!apiKey) throw new Error(" API-nyckel saknas!");
+    if (!orderId) throw new Error("❌Order ID saknas!");
 
     const tenantId = localStorage.getItem("tenantid")
     if (!tenantId) throw new Error("tenant id sakans")
@@ -24,12 +24,12 @@ export const fetchReceiptApi = async (orderId: string, apiKey: string) => {
         
         if (!response.ok) {
             const errorText = await response.text();
-            console.error("🔴 Misslyckades att hämta kvittot:", errorText, response.status);
+            console.error(" Misslyckades att hämta kvittot:", errorText, response.status);
             throw new Error(`Misslyckades att hämta kvitto:${response.status} ${errorText}`);
         }
 
         const data = await response.json();
-        console.log("🟢 Fullständig API-respons för Receipt:", data);
+        console.log("Fullständig API-respons för Receipt:", data);
 
         const orderData = data.order || data
 
@@ -42,10 +42,10 @@ export const fetchReceiptApi = async (orderId: string, apiKey: string) => {
         };
     } catch (error) {
         if (error instanceof TypeError && error.message.includes('fetch')) {
-            console.error("🔴 Nätverksfel vid hämtning av kvitto:", error);
+            console.error(" Nätverksfel vid hämtning av kvitto:", error);
             throw new Error("Kunde inte ansluta till servern. Kontrollera din internetanslutning.");
         }
-        console.error("🔴 Fel vid hämtning av kvitto:", error);
+        console.error(" Fel vid hämtning av kvitto:", error);
         throw error;
     }
 }

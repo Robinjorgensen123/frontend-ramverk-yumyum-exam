@@ -9,12 +9,12 @@ export interface MenuItem {
     id: string;
     name: string;
     price: number;
-    type: "wonton" | "dip"
+    type: "wonton" | "dip" | "drink";
     ingredients?: string[]
     
 }
 
-// Redux state för meny
+// Typ för meny
  interface MenuState {
     items: MenuItem[];
     loading: boolean;

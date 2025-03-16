@@ -13,6 +13,7 @@ const getApiKeyFromLocalStorage = (): string | null => {
 // Spara API-nyckeln i localStorage
 const saveApiKeyToLocalStorage = (apiKey: string) => {
     localStorage.setItem("apiKey", apiKey);
+    location.reload(); // laddar om sidan när API-nyckeln har hämtats
 };
 
 const initialState = {
@@ -21,7 +22,7 @@ const initialState = {
     error: null as string | null,
 };
 
-// Skapa thunk för att hämta API-nyckeln
+// Skapa thunk hämta API-nyckeln
 export const fetchApiKey = createAsyncThunk(
     "apikey/fetchApiKey",
     async (_, { rejectWithValue }) => {

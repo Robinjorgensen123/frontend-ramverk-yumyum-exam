@@ -14,7 +14,7 @@ const CartModal = () => {
     const cart = useSelector((state: RootState) => state.cart.items);
     const isCartOpen = useSelector((state: RootState) => state.ui.isCartOpen);
     const tenantId = useSelector((state: RootState) => state.tenant.tenantId) || localStorage.getItem("tenantId");
-  const totalAmount = useSelector((state: RootState) => state.cart.totalAmount); // Hämtar totalAmount från Redux
+    const totalAmount = useSelector((state: RootState) => state.cart.totalAmount); // Hämtar totalAmount från Redux
 
     const [error, setError] = useState<string | null>(null);
 
@@ -70,7 +70,7 @@ return (
                 <div key={item.id} className="cart-item">
                     <span className="cart-item-name">{item.name}</span>
                     <span className="amount">{item.quantity}</span>
-                    <span className="cart-item-price">{item.price} kr</span>
+                    <span className="cart-item-price">{item.price * item.quantity} kr</span>
                     <button onClick={() => dispatch(removeFromCart(item.id))} className="remove-btn">x</button>
                 </div>
             ))}

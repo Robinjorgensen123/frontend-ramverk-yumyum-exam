@@ -37,7 +37,7 @@ export const fetchEta = createAsyncThunk<
     "eta/fetchEta",
     async ({ tenantId, orderId }, { getState, rejectWithValue }) => {
         try {
-            const state = getState(); // ✅ korrekt hämta state härifrån!
+            const state = getState(); //  hämta state härifrån!
             const apiKey = state.apikey.key;
 
             if (!apiKey) return rejectWithValue("API-nyckel saknas!");
@@ -50,12 +50,12 @@ export const fetchEta = createAsyncThunk<
 
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error("❌ Fel vid hämtning av ETA:", errorText);
+                console.error("Fel vid hämtning av ETA:", errorText);
                 throw new Error(errorText);
             }
 
             const data = await response.json();
-            console.log("✅ ETA API-svar:", data);
+            console.log(" ETA API-svar:", data);
 
             return {
                 orderNumber: data.order.id,
@@ -84,7 +84,7 @@ const etaSlice = createSlice({
                 state.loading = false;
                 state.orderNumber = action.payload.orderNumber;
                 state.eta = action.payload.eta || null;
-                state.state = action.payload.state; // ✅ Sparar även status!
+                state.state = action.payload.state; //  Sparar även status!
                 state.items = action.payload.items || [];
                 state.orderValue = action.payload.orderValue || 0;
             })

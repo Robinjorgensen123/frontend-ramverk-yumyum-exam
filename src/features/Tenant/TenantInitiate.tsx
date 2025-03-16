@@ -1,52 +1,43 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { registerTenant } from "../../features/Tenant/TenantSlice";
 import { fetchApiKey } from "../../features/apiKey/apiKeySlice";
-import "./tenant.css"
+import "./tenant.css";
+
 const TenantInitiate = () => {
     const dispatch = useDispatch<AppDispatch>();
+
+    // ✅ Hämta API-nyckel & Tenant från Redux eller localStorage
     const apiKey = useSelector((state: RootState) => state.apikey.key);
     const apiKeyLoading = useSelector((state: RootState) => state.apikey.loading);
-    const tenantId = useSelector((state: RootState) => state.tenant.tenantId);
+    const tenantId = useSelector((state: RootState) => state.tenant.tenantId) || localStorage.getItem("tenantId");
     const tenantLoading = useSelector((state: RootState) => state.tenant.loading);
-    const [tenantName, setTenantName] = useState<string>("");
 
+    // 🟢 Generera automatiskt ett random Tenant-namn
+    const generateRandomTenantName = () => `tenant-${Math.random().toString(36).substring(7)}`;
+
+    // ✅ Först: Hämta API-nyckeln om den saknas
     useEffect(() => {
-        if (!apiKey) {
-            
+        if (!apiKey && !apiKeyLoading) {
+            console.log("🔹 Hämtar API-nyckel...");
             dispatch(fetchApiKey());
         }
-    }, [dispatch, apiKey]);
-    console.log("Tenant registrerad med ID:", tenantId);
-    const handleRegisterTenant = () => {
-        if (!apiKey) {
-            console.error("Kan inte registrera tenant utan API-nyckel!");
-            return;
+    }, [dispatch, apiKey, apiKeyLoading]);
+
+    // ✅ När API-nyckeln är hämtad, skapa Tenant om den saknas
+    useEffect(() => {
+        if (apiKey && !tenantId && !tenantLoading) {
+            const newTenantName = generateRandomTenantName();
+            console.log(`🔹 Skapar ny Tenant automatiskt: ${newTenantName}`);
+            dispatch(registerTenant(newTenantName));
         }
-        if (tenantName.trim() !== "") {
-            dispatch(registerTenant(tenantName));
-        }
-    };
+    }, [apiKey, tenantId, tenantLoading, dispatch]);
 
     return (
         <div className="create-tenant">
-            {(apiKeyLoading || tenantLoading) && <p>⏳ Hämtar data...</p>}
-
-            {!tenantId && apiKey && (
-                <div className="tenant-wrapper">
-                    <h3>Välj ett namn för din Tenant:</h3>
-                    <input
-                        type="text"
-                        placeholder="Ange tenant-namn..."
-                        value={tenantName}
-                        onChange={(e) => setTenantName(e.target.value)}
-                    />
-                    <button onClick={handleRegisterTenant}>Registrera Tenant</button>
-                </div>
-            )}
-
-           {/*  {tenantId && <p>Tenant registrerad: {tenantId}</p>} */}
+            {(apiKeyLoading || tenantLoading) && <p>⏳ Initierar...</p>}
+           
         </div>
     );
 };
